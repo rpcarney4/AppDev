@@ -1,6 +1,8 @@
 #Tic Tac Toe Game - Final Project Application Development
 #@authors Ryan Carney, Harrison Bruce, Ethan Pyles
 
+
+
 #----------Structure-----------
 
 #disp_selections - Prints available selections
@@ -14,6 +16,8 @@
 #check_row - Checks to see if a player has 3 in a row
 #check_col - Checks to see if a player has 3 in a column
 #check_diag - Checks to see if a player has 3 in a diagonal
+
+
 
 #-----------Gloabls------------
 
@@ -34,6 +38,10 @@ winner = None
 #Variable that is set to the player who is currently playing
 player = "X"
 
+
+#-------------Game Setup--------------
+
+
 #Prints available selections
 def disp_selections():
     print(sel_board[0] + " | " + sel_board[1] + " | " + sel_board[2])
@@ -48,14 +56,17 @@ def disp_board():
 
 #Starts the game
 def play():
-    #initialize board
+    #Display instructions
     print("These are your board locations.")
-    print("Please use your keyboard numbers to make your turns.")
+    print("Please use your keyboard numbers to take your turns.")
     disp_selections()
     print("")
     print("")
     
+    #initialize board
     disp_board()
+    
+    #Loop to check game logic
     while game_prog:
         make_turn(player)
         check_end()
@@ -65,27 +76,45 @@ def play():
     elif winner == None:
         print("Tie Game!")
 
+
+
+#-------------Game Logic---------------
+        
+        
 #Allows the player to make a selection on the board
+#@param player - contains either player "X" or "O"
 def make_turn(player):
     print(player + "'s Turn.")
+    
+    #Receiving user input
     spot = input("Make a selection 1-9:")
+    
+    #Catching invalid moves on board
     valid = False
     while not valid:
-        #Catching invalid positions on board
+        
+        #Checking that input is between 1 and 9
         while spot not in ["1", "2", "3", "4", "5", "6", "7", "8", "9"]:
             spot = input("Invalid place on board. Please make a selection 1-9:")
         spot = int(spot) - 1
+        
+        #checking that input has not already been taken.
         if board[spot] == "-":
             valid = True
         else:
             print("This place has already been taken.")
     
+    #Placing an X or O on the chosen location
     board[spot] = player
     disp_board()
 
 #Changes which player's turn it is
 def change_turn():
+    
+    #Retrieving global variable
     global player
+    
+    #Changing which player has the current turn
     if player == "X":
         player = "O"
     elif player == "O":
@@ -93,24 +122,27 @@ def change_turn():
 
 #Checks to see if the game has ended
 def check_end():
+    
+    #Calling functions check_win and check_tie
     check_win()
     check_tie()
     
 #Checks to see if a player has won
 def check_win():
-    #Set globals
+    
+    #Retrieving global variable
     global winner
     
-    # check rows
+    # Calling check rows
     r_win = check_row()
     
-    # check columns
+    # Calling Check columns
     c_win = check_col()
     
-    # check diagonals
+    # Calling check diagonals
     d_win = check_diag()
     
-    #Declaring the Winner
+    #Setting the Winner
     if r_win:
         winner = r_win
     elif c_win:
@@ -129,17 +161,28 @@ def check_tie():
         game_prog = False
     return
 
+
+
+#------------Win Parameters-------------
+    
+    
 #Checks rows for three straight Xs or Os
 def check_row():
     #Set gloabls
     global game_prog
     
+    #Retrieving values in bottom row
     bot_row = board[0] == board[1] == board[2] != "-"
+    #Retrieving values in middle row
     mid_row = board[3] == board[4] == board[5] != "-"
+    #Retrieving values in top row
     top_row = board[6] == board[7] == board[8] != "-"
     
+    #Checking if a win parameter is met
     if bot_row or mid_row or top_row:
         game_prog = False
+        
+    #Returning "X" or "O" from board to determine winner
     if bot_row:
         return board[0]
     elif mid_row:
@@ -148,20 +191,24 @@ def check_row():
         return board[6]
     
 
-#Checks colums for three straight Xs or Os
+#Checks columns for three straight Xs or Os
 def check_col():
-    #Set gloabls
+    
+    #Retrieving global variable
     global game_prog
     
-    #Left Column
+    #Retrieving values in left column
     l_col = board[0] == board[3] == board[6] != "-"
-    #Middle Column
+    #Retrieving values in middle column
     m_col = board[1] == board[4] == board[7] != "-"
-    #Right Column
+    #Retrieving values in right column
     r_col = board[2] == board[5] == board[8] != "-"
     
+    #Checking if a win parameter is met
     if l_col or m_col or r_col:
         game_prog = False
+        
+    #Returning "X" or "O" from board to determine winner
     if l_col:
         return board[0]
     elif m_col:
@@ -172,20 +219,24 @@ def check_col():
     
 #Checks diagonals for three straight Xs or Os
 def check_diag():
-    #Set gloabls
+    
+    #Retrieving global variable
     global game_prog
     
-    #Diagonal with top left and bottom right spot
+    #Retrieving values in diagonal with top left and bottom right spot
     tl_br = board[2] == board[4] == board[6] != "-"
-    #Diagonal with top right and bottom left spot
+    #Retrieving values in diagonal with top right and bottom left spot
     tr_bl = board[0] == board[4] == board[8] != "-"
     
+    #Checking if a win parameter is met
     if tl_br or tr_bl:
         game_prog = False
+        
+    #Returning "X" or "O" from board to determine winner
     if tl_br:
         return board[6]
     elif tr_bl:
         return board[0]
     
-
+#Calling play function to start the game
 play()
